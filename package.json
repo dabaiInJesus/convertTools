@@ -1,6 +1,12 @@
 {
   "name": "convertTools",
-  "version": "1.0.0",
+  "version": "1.1.0",
+  "description": "All-in-One File Format Converter - CSV, Excel, JSON, XML, Base64, URL Encode, and more. 100% free & browser-based.",
+  "homepage": "https://github.com/dabaiInJesus/convertTools",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dabaiInJesus/convertTools.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -14,6 +20,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
     "autoprefixer": "^10.4.0",
+    "jszip": "^3.10.1",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
     "vite": "^5.0.0"
