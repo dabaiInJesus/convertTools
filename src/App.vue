@@ -42,11 +42,11 @@
 
     <!-- Hero -->
     <section class="max-w-6xl mx-auto px-4 py-12 text-center">
-      <h1 class="text-4xl font-bold text-gray-900 mb-3">All-in-One File Format Converter</h1>
-      <p class="text-gray-600 text-lg mb-4">Convert CSV, Excel, JSON, XML in seconds. No installation. Free.</p>
+      <h1 class="text-4xl font-bold text-gray-900 mb-3">{{ t('hero.title') }}</h1>
+      <p class="text-gray-600 text-lg mb-4">{{ t('hero.subtitle') }}</p>
       <div class="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full">
-        <span class="text-green-700 text-sm">🎉 100% Free & Open Source</span>
-        <button @click="showUpgradeModal = true" class="text-green-600 hover:text-green-800 text-sm font-semibold underline">Support ❤️</button>
+        <span class="text-green-700 text-sm">{{ t('hero.badge') }}</span>
+        <button @click="showUpgradeModal = true" class="text-green-600 hover:text-green-800 text-sm font-semibold underline">{{ t('hero.supportLink') }}</button>
       </div>
     </section>
 
@@ -57,11 +57,11 @@
         <div v-if="showHistory" class="lg:col-span-1">
           <div class="bg-white rounded-2xl shadow-lg p-4 sticky top-4">
             <div class="flex items-center justify-between mb-4">
-              <h3 class="font-semibold text-gray-900">Recent Conversions</h3>
-              <button @click="clearHistory" class="text-xs text-gray-500 hover:text-gray-700">Clear</button>
+              <h3 class="font-semibold text-gray-900">{{ t('ui.recentConversions') }}</h3>
+              <button @click="clearHistory" class="text-xs text-gray-500 hover:text-gray-700">{{ t('ui.clearHistory') }}</button>
             </div>
             <div v-if="history.length === 0" class="text-center py-8 text-gray-400 text-sm">
-              No history yet
+              {{ t('ui.noHistory') }}
             </div>
             <div v-else class="space-y-2 max-h-96 overflow-y-auto">
               <div v-for="(item, idx) in history" :key="idx" 
@@ -71,7 +71,7 @@
                   <span class="font-medium text-gray-700">{{ item.from }} → {{ item.to }}</span>
                   <span class="text-xs text-gray-400">{{ formatTime(item.timestamp) }}</span>
                 </div>
-                <div class="text-xs text-gray-500 truncate">{{ item.fileName || 'Text input' }}</div>
+                <div class="text-xs text-gray-500 truncate">{{ item.fileName || t('ui.textInput') }}</div>
               </div>
             </div>
           </div>
@@ -128,14 +128,14 @@
                   @click="inputMode = 'file'"
                   :class="['text-sm font-medium', inputMode === 'file' ? 'text-indigo-600' : 'text-gray-500']"
                 >
-                  📁 Upload File
+                  {{ t('ui.uploadFile') }}
                 </button>
                 <span class="text-gray-300">|</span>
                 <button
                   @click="inputMode = 'text'"
                   :class="['text-sm font-medium', inputMode === 'text' ? 'text-indigo-600' : 'text-gray-500']"
                 >
-                  ⌨️ Paste Text
+                  {{ t('ui.pasteText') }}
                 </button>
               </div>
 
@@ -143,14 +143,14 @@
               <div v-if="selectedFormat === 'batch'" class="mb-6">
                 <div class="border-2 border-dashed border-amber-300 rounded-xl p-8 text-center bg-amber-50">
                   <div class="text-4xl mb-3">📁</div>
-                  <p class="text-amber-800 font-semibold mb-2">Batch Convert {{ isPro ? '(Pro)' : '' }}</p>
-                  <p class="text-amber-600 text-sm mb-4">Convert multiple files at once with same output format</p>
+                  <p class="text-amber-800 font-semibold mb-2">{{ t('ui.batchConvertPro') }}{{ isPro ? '' : ` (${t('app.pro')})` }}</p>
+                  <p class="text-amber-600 text-sm mb-4">{{ t('upload.batchSubtitle') }}</p>
                   <input ref="batchFileInput" type="file" multiple class="hidden" @change="handleBatchFiles" accept=".csv,.xlsx,.xls,.json,.txt,.xml" />
                   <button @click="$refs.batchFileInput.click()" class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg transition">
-                    📂 Select Multiple Files
+                    {{ t('ui.selectMultipleFiles') }}
                   </button>
                   <div v-if="batchFiles.length > 0" class="mt-4 text-left">
-                    <p class="text-sm text-amber-700 font-medium mb-2">{{ batchFiles.length }} files selected:</p>
+                    <p class="text-sm text-amber-700 font-medium mb-2">{{ batchFiles.length }} {{ t('ui.filesSelected') }}</p>
                     <div class="max-h-40 overflow-y-auto space-y-1">
                       <div v-for="(f, idx) in batchFiles" :key="idx" class="flex items-center justify-between bg-white rounded-lg px-3 py-2 text-sm">
                         <span class="text-gray-700 truncate">{{ f.name }}</span>
@@ -158,8 +158,8 @@
                       </div>
                     </div>
                     <div class="mt-3 flex items-center justify-between">
-                      <span class="text-sm text-amber-700 font-medium">Output: {{ toFormat }}</span>
-                      <button @click="clearBatchFiles" class="text-sm text-gray-500 hover:text-gray-700">Clear all</button>
+                      <span class="text-sm text-amber-700 font-medium">{{ t('ui.outputFormat') }} {{ toFormat }}</span>
+                      <button @click="clearBatchFiles" class="text-sm text-gray-500 hover:text-gray-700">{{ t('ui.clearAll') }}</button>
                     </div>
                   </div>
                 </div>
@@ -169,7 +169,7 @@
               <div v-else-if="selectedFormat !== 'text'" class="mb-6">
                 <!-- Size Warning -->
                 <div v-if="currentDataSize > dataSizeLimit && !isPro" class="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-sm">
-                  ⚠️ File size exceeds {{ formatSize(dataSizeLimit) }} limit. Upgrade to Pro for files up to {{ formatSize(proDataSizeLimit) }}.
+                  ⚠️ {{ t('sizeWarning.free', { limit: formatSize(dataSizeLimit), proLimit: formatSize(proDataSizeLimit) }) }}
                 </div>
 
                 <div v-if="inputMode === 'file'" 
@@ -179,15 +179,15 @@
                      @drop.prevent="handleDrop">
                   <input ref="fileInput" type="file" class="hidden" @change="handleFile" :accept="acceptedFileTypes" />
                   <div class="text-4xl mb-3">📤</div>
-                  <p class="text-gray-600 font-medium">Drop your file here or click to browse</p>
-                  <p class="text-gray-400 text-sm mt-1">{{ acceptedFileTypes }} files supported</p>
+                  <p class="text-gray-600 font-medium">{{ t('ui.dropFileText') }}</p>
+                  <p class="text-gray-400 text-sm mt-1">{{ acceptedFileTypes }} {{ t('upload.supportedFiles') }}</p>
                   <p v-if="inputFile" class="mt-2 text-sm text-indigo-600 font-medium">{{ inputFile.name }} ({{ formatSize(inputFile.size) }})</p>
                 </div>
                 <div v-else>
                   <textarea
                     v-model="inputText"
                     class="w-full h-48 p-4 border border-gray-300 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-                    :placeholder="'Paste your ' + fromFormat + ' content here...'"
+                    :placeholder="t('textTools.pastePlaceholder', { format: fromFormat })"
                   ></textarea>
                   <p class="text-xs text-gray-400 mt-1 text-right">{{ formatSize(currentDataSize) }}</p>
                 </div>
@@ -198,7 +198,7 @@
                 <textarea
                   v-model="inputText"
                   class="w-full h-48 p-4 border border-gray-300 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-                  placeholder="Enter your text here..."
+                  :placeholder="t('textTools.placeholder')"
                 ></textarea>
                 <p class="text-xs text-gray-400 mt-1 text-right">{{ formatSize(currentDataSize) }}</p>
               </div>
@@ -206,7 +206,7 @@
               <!-- Progress Bar -->
               <div v-if="converting && conversionProgress > 0" class="mb-6">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-sm text-gray-600">Converting...</span>
+                  <span class="text-sm text-gray-600">{{ t('progress.converting') }}</span>
                   <span class="text-sm text-gray-600">{{ conversionProgress }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
@@ -217,9 +217,9 @@
               <!-- Batch Output -->
               <div v-if="selectedFormat === 'batch' && batchOutput.length > 0" class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
                 <div class="flex items-center justify-between mb-3">
-                  <span class="text-green-700 font-medium">✅ {{ batchOutput.length }} files converted!</span>
+                  <span class="text-green-700 font-medium">✅ {{ batchOutput.length }} {{ t('messages.success', { count: '' }).replace(' 个文件转换成功！', '') }}</span>
                   <button @click="downloadAllBatch" class="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition">
-                    ⬇️ Download All (ZIP)
+                    {{ t('ui.downloadAllZip') }}
                   </button>
                 </div>
                 <div class="space-y-1">
@@ -238,8 +238,8 @@
                   :disabled="!canConvert || converting || (currentDataSize > dataSizeLimit && !isPro)"
                   class="px-8 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition shadow-lg shadow-indigo-200"
                 >
-                  <span v-if="converting">⚡ Converting...</span>
-                  <span v-else>🔄 Convert to {{ toFormat }}</span>
+                  <span v-if="converting">{{ t('ui.converting') }}</span>
+                  <span v-else>{{ t('ui.convertTo', { format: toFormat }) }}</span>
                 </button>
               </div>
 
@@ -256,14 +256,14 @@
               <!-- Output Area -->
               <div v-if="output" class="bg-gray-900 rounded-xl p-4 relative">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-gray-400 text-sm font-medium">Output ({{ toFormat.toUpperCase() }})</span>
+                  <span class="text-gray-400 text-sm font-medium">{{ t('ui.outputTitle', { format: toFormat.toUpperCase() }) }}</span>
                   <div class="flex items-center gap-2">
                     <span class="text-xs text-gray-500">{{ formatSize(output.length) }}</span>
                     <button @click="copyOutput" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs rounded-lg transition">
-                      {{ copied ? '✅ Copied!' : '📋 Copy' }}
+                      {{ copied ? t('ui.copied') : t('ui.copy') }}
                     </button>
                     <button @click="downloadOutput" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white text-xs rounded-lg transition">
-                      ⬇️ Download
+                      ⬇️ {{ t('output.download').replace('⬇️ ', '') }}
                     </button>
                   </div>
                 </div>
@@ -282,25 +282,25 @@
       <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="bg-white rounded-xl p-6 text-center shadow-sm">
           <div class="text-3xl mb-3">🚀</div>
-          <h3 class="font-semibold text-gray-900 mb-1">Lightning Fast</h3>
-          <p class="text-gray-500 text-sm">Convert files instantly in your browser. No server upload needed.</p>
+          <h3 class="font-semibold text-gray-900 mb-1">{{ t('ui.lightningFast') }}</h3>
+          <p class="text-gray-500 text-sm">{{ t('ui.fastDesc') }}</p>
         </div>
         <div class="bg-white rounded-xl p-6 text-center shadow-sm">
           <div class="text-3xl mb-3">🔒</div>
-          <h3 class="font-semibold text-gray-900 mb-1">100% Private</h3>
-          <p class="text-gray-500 text-sm">Your files never leave your device. Everything runs locally.</p>
+          <h3 class="font-semibold text-gray-900 mb-1">{{ t('ui.private') }}</h3>
+          <p class="text-gray-500 text-sm">{{ t('ui.privateDesc') }}</p>
         </div>
         <div class="bg-white rounded-xl p-6 text-center shadow-sm">
           <div class="text-3xl mb-3">💯</div>
-          <h3 class="font-semibold text-gray-900 mb-1">100% Free</h3>
-          <p class="text-gray-500 text-sm">No limits, no signup, no ads. Open source forever.</p>
+          <h3 class="font-semibold text-gray-900 mb-1">{{ t('ui.freeForever') }}</h3>
+          <p class="text-gray-500 text-sm">{{ t('ui.freeDesc') }}</p>
         </div>
       </div>
     </main>
 
     <!-- Footer -->
     <footer class="text-center py-6 text-gray-400 text-sm">
-      Built with ❤️ by <a href="https://github.com/dabaiInJesus" class="text-indigo-500 hover:underline">@dabaiInJesus</a> · Powered by Vue3
+      {{ t('ui.builtBy') }} <a href="https://github.com/dabaiInJesus" class="text-indigo-500 hover:underline">@dabaiInJesus</a> {{ t('ui.poweredBy') }}
     </footer>
 
     <!-- Upgrade Modal -->
@@ -310,8 +310,8 @@
           <!-- Modal Header -->
           <div class="bg-gradient-to-r from-green-600 to-emerald-600 p-6 text-center">
             <div class="text-4xl mb-2">☕</div>
-            <h2 class="text-2xl font-bold text-white">Support convertTools</h2>
-            <p class="text-green-100 mt-1">This tool is 100% free & open source</p>
+            <h2 class="text-2xl font-bold text-white">{{ t('upgrade.title') }}</h2>
+            <p class="text-green-100 mt-1">{{ t('upgrade.subtitle') }}</p>
           </div>
 
           <!-- Modal Body -->
@@ -319,39 +319,39 @@
             <!-- Not Sponsor: Show support options -->
             <div v-if="!isPro">
               <div class="bg-gray-50 rounded-xl p-4 mb-6">
-                <h3 class="font-semibold text-gray-900 mb-3">If this tool saved you time 💪</h3>
+                <h3 class="font-semibold text-gray-900 mb-3">{{ t('upgrade.ifHelpful') }}</h3>
                 <ul class="space-y-2 text-sm text-gray-600">
-                  <li class="flex items-center gap-2">☕ <span>Buy me a coffee</span></li>
-                  <li class="flex items-center gap-2">⭐ <span>Star on GitHub</span></li>
-                  <li class="flex items-center gap-2">🔗 <span>Share with friends</span></li>
+                  <li class="flex items-center gap-2">☕ <span>{{ t('upgrade.buyCoffee') }}</span></li>
+                  <li class="flex items-center gap-2">⭐ <span>{{ t('upgrade.starGithub') }}</span></li>
+                  <li class="flex items-center gap-2">🔗 <span>{{ t('upgrade.shareFriends') }}</span></li>
                 </ul>
               </div>
 
               <!-- Support buttons -->
               <div class="space-y-3 mb-6">
                 <a href="https://buymeacoffee.com/dabaiInJesus" target="_blank" class="flex items-center justify-center gap-2 w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold text-center rounded-xl transition shadow-lg">
-                  ☕ Buy Me a Coffee
+                  {{ t('upgrade.buyCoffeeBtn') }}
                 </a>
                 <a href="https://github.com/dabaiInJesus/convertTools" target="_blank" class="flex items-center justify-center gap-2 w-full py-3 bg-gray-900 hover:bg-gray-800 text-white font-semibold text-center rounded-xl transition">
-                  ⭐ Star on GitHub
+                  {{ t('upgrade.starGithubBtn') }}
                 </a>
               </div>
 
               <!-- Sponsor badge divider -->
               <div class="flex items-center gap-3 my-6">
                 <div class="flex-1 h-px bg-gray-200"></div>
-                <span class="text-gray-400 text-sm">or enter sponsor code</span>
+                <span class="text-gray-400 text-sm">{{ t('upgrade.orEnterCode') }}</span>
                 <div class="flex-1 h-px bg-gray-200"></div>
               </div>
             </div>
 
             <!-- License Key Input -->
             <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">License Key</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">{{ t('upgrade.licenseKey') }}</label>
               <input
                 v-model="licenseKeyInput"
                 type="text"
-                placeholder="CH-PRO-XXXX-XXXX-XXXX"
+                :placeholder="t('upgrade.placeholder')"
                 class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -369,20 +369,20 @@
             <!-- Action Buttons -->
             <div class="flex gap-3">
               <button @click="showUpgradeModal = false" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition">
-                {{ isPro ? 'Close' : 'Cancel' }}
+                {{ isPro ? t('ui.close') : t('ui.cancel') }}
               </button>
               <button v-if="isPro" @click="deactivatePro" class="flex-1 py-3 bg-red-100 hover:bg-red-200 text-red-700 font-medium rounded-xl transition">
-                Remove License
+                {{ t('ui.removeLicense') }}
               </button>
               <button v-else @click="activateLicense" :disabled="!licenseKeyInput.trim()" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 text-white font-semibold rounded-xl transition">
-                Activate
+                {{ t('upgrade.activate') }}
               </button>
             </div>
 
             <!-- Pro badge if activated -->
             <div v-if="isPro" class="mt-4 p-3 bg-green-50 rounded-lg text-center">
-              <span class="text-green-700 font-medium">✅ Pro Activated</span>
-              <p class="text-gray-500 text-xs mt-1">License stored locally in your browser</p>
+              <span class="text-green-700 font-medium">{{ t('upgrade.proActivated') }}</span>
+              <p class="text-gray-500 text-xs mt-1">{{ t('upgrade.storedLocally') }}</p>
             </div>
           </div>
         </div>
