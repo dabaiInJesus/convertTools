@@ -11,6 +11,10 @@ cd dist
 if [ ! -d .git ]; then
   git init
   git checkout -b gh-pages
+  git remote add origin https://github.com/dabaiInJesus/convertTools.git
+else
+  # Ensure remote is configured
+  git remote set-url origin https://github.com/dabaiInJesus/convertTools.git 2>/dev/null || git remote add origin https://github.com/dabaiInJesus/convertTools.git
 fi
 
 git add .
