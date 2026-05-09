@@ -50,7 +50,7 @@ export function getLocale(): Locale {
   return currentLocale
 }
 
-// 初始化语言（从 localStorage 或浏览器语言）
+// 初始化语言（从 localStorage 或默认中文）
 export function initLocale(): Locale {
   const stored = localStorage.getItem('convertTools_locale') as Locale
   if (stored && messages[stored]) {
@@ -58,13 +58,8 @@ export function initLocale(): Locale {
     return stored
   }
   
-  // 尝试从浏览器语言检测
-  const browserLang = navigator.language
-  if (browserLang.startsWith('zh')) {
-    currentLocale = 'zh-CN'
-  } else {
-    currentLocale = 'en-US'
-  }
+  // 默认使用中文
+  currentLocale = 'zh-CN'
   
   return currentLocale
 }
